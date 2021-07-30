@@ -36,8 +36,7 @@ class AppView extends View
      * @return void
      */
     public function initialize(): void
-    { 
-        
+    {
         echo $this->Html->css('materialize.min');
         echo $this->Html->script('materialize.min');
     }
