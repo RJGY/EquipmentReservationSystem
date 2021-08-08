@@ -3,7 +3,19 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Labequipment[]|\Cake\Collection\CollectionInterface $labequipment
  */
+
+$this->Html->scriptStart(['block' => true]);
+echo "document.addEventListener('DOMContentLoaded', function() {
+    function selected(date) {
+        console.log(date);
+    }
+    var options = {format:'dd mm yyyy', onSelect: selected};
+    var elems = document.querySelectorAll('.datepicker');
+    var instances = M.Datepicker.init(elems, options);
+  });";
+$this->Html->scriptEnd()
 ?>
+
 <div class="labequipment index content">
     <?= $this->Html->link(__('New Labequipment'), ['action' => 'add'], ['class' => 'button float-right']) ?>
     <h3><?= __('Labequipment') ?></h3>
@@ -54,4 +66,13 @@
         </ul>
         <p><?= $this->Paginator->counter(__('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')) ?></p>
     </div>
+</div>
+
+
+<div class="card-panel teal lighten-2">
+    <input type="text" class="datepicker" placeholder="Start Date" id="startdate"/>
+</div>
+
+<div class="card-panel teal lighten-2">
+    <input type="text" class="datepicker" placeholder="End Date" id="enddate"/>
 </div>
