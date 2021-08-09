@@ -70,11 +70,7 @@ $this->Html->scriptEnd()
         <p><?= $this->Paginator->counter(__('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')) ?></p>
     </div>
 </div>
-<<<<<<< HEAD
 <!--
-=======
-
->>>>>>> main
 <div class="card-panel teal lighten-2">
     <?= $this->Form->create($labBookings) ?>
     <?php
@@ -83,9 +79,5 @@ $this->Html->scriptEnd()
     ?>
     <?= $this->Form->postLink(__('Book'), ['action' => 'book', $equipmentItems->equipment_id]) ?>
     <?= $this->Form->end() ?>
-<<<<<<< HEAD
 </div>
 -->
-=======
-</div>
->>>>>>> main
