@@ -14,6 +14,8 @@
  * @var \App\View\AppView $this
  */
 
+use Cake\Core\Configure;
+
 $cakeDescription = 'Development';
 ?>
 <!DOCTYPE html>
@@ -41,9 +43,29 @@ $cakeDescription = 'Development';
             <a class="logo" href="<?= $this->Url->build('/') ?>">CQUniversity</a>
         </div>
         <div class="top-nav-links">
-            <a class="logo" href="equipment-items">Equipment Items</a>    
-            <a class="logo" target="_blank" rel="noopener" href="https://my.cqu.edu.au/">MyCQU</a>
-            <a class="logo" href="lab-bookings">Admin</a>
+
+            <?= $this->Html->link(__('Lab Equipment'), ['controller' => 'EquipmentItems','action' => 'index']) ?>
+            <?= $this->Html->link(__('Material Safety'), ['controller' => 'Msds','action' => 'index']) ?>
+                        
+            <?php
+                Configure::restore('signed_in', 'default');
+                $signed_in = Configure::read('signed_in');
+                Configure::restore('is_staff', 'default');
+                $is_staff = Configure::read('is_staff');
+            ?>
+
+            <?php if ($signed_in == true) {
+                if ($is_staff == true) {
+                    $this->Html->link(__('Lab Bookings'), ['controller' => 'LabBookings','action' => 'index']);
+                    $this->Html->link(__('User'), ['controller' => 'Users','action' => 'index']);
+                }
+                $this->Html->link(__('User'), ['controller' => 'Users','action' => 'logout']);
+            }
+            else {
+                $this->Html->link(__('User'), ['controller' => 'Users','action' => 'login']);
+            }
+            ?>
+
         </div>
     </nav>
     <main class="main">

@@ -9,6 +9,10 @@ use Cake\ORM\Locator\LocatorAwareTrait;
 
 class EquipmentItemsController extends AppController
 {
+    public $paginate = [
+        'limit' => 1000,
+    ];
+
     public function beforeFilter(\Cake\Event\EventInterface $event)
     {
         parent::beforeFilter($event);
@@ -22,7 +26,9 @@ class EquipmentItemsController extends AppController
         //$this->Authorization->skipAuthorization();
         $this->loadModel('LabBookings');
         $labBookings = $this->LabBookings->newEmptyEntity();
+
         $this->Authorization->authorize($labBookings);
+
         $labBookings->equipment_id = $id;
         $labBookings->staff_id = 1234;
         $labBookings->student_id = $this->request->getAttribute('identity')->getIdentifier();
@@ -51,13 +57,13 @@ class EquipmentItemsController extends AppController
                     ->select(['equipment_campus'])
                     ->distinct(['equipment_campus'])
                     ->where(['equipment_status' => 1]);
-                    
-        $this->set(compact('query'));             
+
+        $this->set(compact('query'));
         $campuslist = array();
         array_push($campuslist, 'Display All');
         foreach ($query->all() as $equipmentItems) {
             array_push($campuslist, $equipmentItems->equipment_campus);
-        } 
+        }
         return $campuslist;
 
     }
@@ -87,7 +93,14 @@ class EquipmentItemsController extends AppController
             if($filterType == 'CF'){
                 $filter = $selectedFilter->campusFilter;
                 $filter = $this->filterByCampus($filter);
-                $settings = ['conditions' => array('EquipmentItems.equipment_campus LIKE' => "%$filter%")];
+                $settings = ['conditions' => array(
+                  "OR" => array('EquipmentItems.equipment_name LIKE' => "%$filter%",
+                    'EquipmentItems.equipment_campus LIKE' => "%$filter%",
+                    'EquipmentItems.equipment_lab LIKE' => "%$filter%",
+                    'EquipmentItems.equipment_discipline LIKE' => "%$filter%",
+                    'EquipmentItems.equipment_details LIKE' => "%$filter%",
+                    'EquipmentItems.equipment_media LIKE' => "%$filter%",
+                    'EquipmentItems.equipment_whs LIKE' => "%$filter%"))];
                 $equipmentItems = $this->paginate($this->EquipmentItems, $settings);
                 $this->set(compact('equipmentItems'));
             }
@@ -109,7 +122,7 @@ class EquipmentItemsController extends AppController
 
         //Retrieve Campus List
         $campuslist = $this->listCampus();
-        $this->set(compact('campuslist'));       
+        $this->set(compact('campuslist'));
     }
 
     public function view($id = null)
@@ -133,7 +146,7 @@ class EquipmentItemsController extends AppController
         
         $equipmentItems = $this->EquipmentItems->newEmptyEntity();
         $this->Authorization->authorize($equipmentItems);
-        
+
         if ($this->request->is('post')) {
             $equipmentItems = $this->EquipmentItems->patchEntity($equipmentItems, $this->request->getData());
             if ($this->EquipmentItems->save($equipmentItems)) {
@@ -176,9 +189,8 @@ class EquipmentItemsController extends AppController
 
         $this->request->allowMethod(['post', 'delete']);
         $equipmentItems = $this->EquipmentItems->get($id);
-        
         $this->Authorization->authorize($equipmentItems);
-
+      
         $equipmentItems->equipment_status = '0';
 
         if ($this->request->is(['patch', 'post', 'put'])) {
@@ -197,15 +209,15 @@ class EquipmentItemsController extends AppController
 
     public function filterByCampus($filter)
     {
-        $campusFilter = null;             
+        $campusFilter = null;
         $campuslist = $this->listCampus();
         $campusFilter = $campuslist[$filter];
-                    
+
         if($campusFilter == 'Display All')
         {
             $campusFilter = null;
         }
 
         return $campusFilter;
-    }  
+    }
 }

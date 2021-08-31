@@ -61,18 +61,17 @@ create table lab_bookings
   equipment_id int not null references equipment_items(equipment_id),
   staff_id int not null references staff(staff_id),
   student_id int null references student(student_id),
-  booking_date TIMESTAMP not null default current_timestamp, 
-  date_return TIMESTAMP not null default current_timestamp,
+  booking_date TIMESTAMP not null default current_timestamp,
   booking_status boolean default false not null
 );
 
 insert into lab_bookings values
-  (1, 1, 0099, 12097012, current_timestamp, current_timestamp, true),
-  (2, 2, 0099, 12097012, current_timestamp, current_timestamp, true),
-  (3, 7, 0100, 12087651, current_timestamp, current_timestamp, true),
-  (4, 9, 0100, 12087651, current_timestamp, current_timestamp, true),
-  (5, 11, 0101, 12009874, current_timestamp, current_timestamp, true),
-  (6, 13, 0101, 12097543, current_timestamp, current_timestamp, true);
+  (1, 1, 0099, 12097012, current_timestamp, true),
+  (2, 2, 0099, 12097012, current_timestamp, true),
+  (3, 7, 0100, 12087651, current_timestamp, true),
+  (4, 9, 0100, 12087651, current_timestamp, true),
+  (5, 11, 0101, 12009874, current_timestamp, true),
+  (6, 13, 0101, 12097543, current_timestamp, true);
 
 create table staff
 (
@@ -101,6 +100,21 @@ insert into students values
   (12087651, 'Jed Pena', 'jed.pena@cqumail.com'),
   (12009874, 'Maria Fox', 'maria.fox@cqumail.com'),
   (12097543, 'Stan Johnston', 'stanjohnston@cqumail.com');
+
+  create table msds
+  (
+    doc_id int unsigned not null auto_increment primary key,
+    doc_name varchar(50) not null,
+    doc_url varchar(100) not null
+  );
+
+  insert into msds values
+    (1, 'Material Safety Data Sheets', 'https://www-msds-com-au.ezproxy.cqu.edu.au/DefaultMSDS.aspx?ReturnUrl=%2f'),
+    (2, 'First Aid', 'https://www.healthdirect.gov.au/first-aid'),
+    (3, 'Health Information Partners', 'https://www.healthdirect.gov.au/information-partners'),
+    (4, 'Emergency Services', 'https://info.australia.gov.au/information-and-services/public-safety-and-law/emergency-services'),
+    (5, 'Fire Safety', 'https://www.studyinaustralia.gov.au/english/live-in-australia/health-and-safety/fire')
+    ;
 
 
 create table users
