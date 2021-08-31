@@ -19,13 +19,10 @@ class EquipmentItemsController extends AppController
 
     public function book($id = null)
     {
-        $this->Authorization->skipAuthorization();
-
+        //$this->Authorization->skipAuthorization();
         $this->loadModel('LabBookings');
         $labBookings = $this->LabBookings->newEmptyEntity();
-        
-        //$this->Authorization->authorize($labBookings);
-
+        $this->Authorization->authorize($labBookings);
         $labBookings->equipment_id = $id;
         $labBookings->staff_id = 1234;
         $labBookings->student_id = $this->request->getAttribute('identity')->getIdentifier();
@@ -67,7 +64,6 @@ class EquipmentItemsController extends AppController
 
     public function index()
     {
-        
         $this->Authorization->skipAuthorization();
 
         //After Post Request
@@ -129,12 +125,15 @@ class EquipmentItemsController extends AppController
 
     public function add()
     {
-        $this->Authorization->skipAuthorization();
-
-        $equipmentItems = $this->EquipmentItems->newEmptyEntity();
+        //$this->Authorization->skipAuthorization();
+        $this->loadModel('Users');
+        $user = $this->Users->get(7, [
+            'contain' => [],
+        ]);
         
-        //$this->Authorization->authorize($equipmentItems);
-
+        $equipmentItems = $this->EquipmentItems->newEmptyEntity();
+        $this->Authorization->authorize($equipmentItems);
+        
         if ($this->request->is('post')) {
             $equipmentItems = $this->EquipmentItems->patchEntity($equipmentItems, $this->request->getData());
             if ($this->EquipmentItems->save($equipmentItems)) {
@@ -149,13 +148,13 @@ class EquipmentItemsController extends AppController
 
     public function edit($id = null)
     {
-        $this->Authorization->skipAuthorization();
+        //$this->Authorization->skipAuthorization();
 
         $equipmentItems = $this->EquipmentItems->get($id, [
             'contain' => [],
         ]);
 
-        //$this->Authorization->authorize($equipmentItems);
+        $this->Authorization->authorize($equipmentItems);
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             $equipmentItems = $this->EquipmentItems->patchEntity($equipmentItems, $this->request->getData());
@@ -173,12 +172,12 @@ class EquipmentItemsController extends AppController
     {
         // The delete function now unlists the equipment item rather then deleting it.
         // The index page only shows equipment that have a status of 1, pressing delete sets it to zero.
-        $this->Authorization->skipAuthorization();
+        //$this->Authorization->skipAuthorization();
 
         $this->request->allowMethod(['post', 'delete']);
         $equipmentItems = $this->EquipmentItems->get($id);
         
-        //$this->Authorization->authorize($equipmentItems);
+        $this->Authorization->authorize($equipmentItems);
 
         $equipmentItems->equipment_status = '0';
 
