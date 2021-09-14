@@ -26,8 +26,6 @@ class LabBookingsController extends AppController
             $filterData = $this->request->getData();
             $filterData['studentID'] = $this->request->getAttribute('identity')->getStudentID();
             $filterData['booking_status'] = true;
-            debug($filterData);
-            exit();
         }
 
         $this->loadModel('LabBookings');
@@ -51,7 +49,7 @@ class LabBookingsController extends AppController
         $this->Authorization->skipAuthorization();
 
         $this->loadModel('LabBookings');
-                
+        
         $labBookings = $this->LabBookings->newEmptyEntity();
 
         //$this->Authorization->authorize($labBookings);
@@ -64,6 +62,14 @@ class LabBookingsController extends AppController
                 return $this->redirect(['action' => 'index']);
             }
             $this->Flash->error(__('Your lab booking could not be saved. Please, try again.'));
+        }
+
+        if ($this->request->is('get')) {
+            $labBookings->equipment_id = $this->request->getQuery('equipment_id');
+            $labBookings->staff_id = $this->request->getQuery('staff_id');
+            $labBookings->student_id = $this->request->getQuery('student_id');
+            $labBookings->booking_date = $this->request->getQuery('booking_date');
+            $labBookings->return_date = $this->request->getQuery('return_date');
         }
         $this->set(compact('labBookings'));
     }
