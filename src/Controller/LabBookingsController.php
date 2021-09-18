@@ -19,15 +19,6 @@ class LabBookingsController extends AppController
     {
         $this->Authorization->skipAuthorization();
 
-        //After Post Request
-        if ($this->request->is('post')) {
-
-            //Get data for equipment and campus filters
-            $filterData = $this->request->getData();
-            $filterData['studentID'] = $this->request->getAttribute('identity')->getStudentID();
-            $filterData['booking_status'] = true;
-        }
-
         $this->loadModel('LabBookings');
         $labBookings = $this->paginate($this->LabBookings);
         $this->set(compact('labBookings'));
@@ -46,13 +37,13 @@ class LabBookingsController extends AppController
 
     public function add()
     {
-        $this->Authorization->skipAuthorization();
+        //$this->Authorization->skipAuthorization();
 
         $this->loadModel('LabBookings');
         
         $labBookings = $this->LabBookings->newEmptyEntity();
 
-        //$this->Authorization->authorize($labBookings);
+        $this->Authorization->authorize($labBookings);
         if ($this->request->is('post')) {
             $labBookings = $this->LabBookings->patchEntity($labBookings, $this->request->getData());
 
@@ -76,14 +67,14 @@ class LabBookingsController extends AppController
 
     public function edit($id = null)
     {
-        $this->Authorization->skipAuthorization();
+        //$this->Authorization->skipAuthorization();
 
         $this->loadModel('LabBookings');
         $labBookings = $this->LabBookings->get($id, [
             'contain' => [],
         ]);
         
-        //$this->Authorization->authorize($labBookings);
+        $this->Authorization->authorize($labBookings);
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             $labBookings = $this->LabBookings->patchEntity($labBookings, $this->request->getData());
@@ -100,11 +91,11 @@ class LabBookingsController extends AppController
 
     public function delete($id = null)
     {
-        $this->Authorization->skipAuthorization();
+        //$this->Authorization->skipAuthorization();
         
         $this->loadModel('LabBookings');
         
-        //$this->request->allowMethod(['post', 'delete']);
+        $this->request->allowMethod(['post', 'delete']);
 
         $labBookings = $this->LabBookings->get($id);
         $this->Authorization->authorize($labBookings);
